@@ -1,11 +1,17 @@
 name: Release
 
-# Push a tag like v0.2.4 (matching "version" in package.json) to build the RPM
-# and attach it, with its SHA-256 checksum, to the GitHub release for that tag.
+# Push a tag like v0.2.5 (matching "version" in package.json) to build every Linux
+# package for x86_64 and arm64 and publish them on the GitHub release for that tag.
+# Release notes come from the matching "## <version>" section of CHANGELOG.md.
 
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to (re)build, e.g. v0.2.4
+        required: true
 
 permissions:
   contents: write
@@ -13,8 +19,12 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-24.04
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -22,21 +32,50 @@ jobs:
       - name: Tag must match package.json version
         run: |
           version="$(node -p 'require("./package.json").version')"
-          test "v${version}" = "${GITHUB_REF_NAME}" || { echo "Tag ${GITHUB_REF_NAME} does not match version ${version}"; exit 1; }
-      - run: sudo apt-get update -qq && sudo apt-get install -y -qq rpm > /dev/null
+          test "v${version}" = "${TAG}" || { echo "Tag ${TAG} does not match version ${version}"; exit 1; }
+          echo "VERSION=${version}" >> "$GITHUB_ENV"
+      - name: Build tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq rpm libarchive-tools > /dev/null
       - run: npm ci
       - run: npm run check
-      - run: npm run package:rpm
-      - name: Checksum
-        working-directory: dist/outlook-for-linux
-        run: for f in *.rpm; do sha256sum "$f" > "$f.sha256"; done
-      - name: Create or update the release
+      - name: Build RPM, DEB, AppImage and tar.gz for x86_64 and arm64
+        run: node scripts/package.js outlook-for-linux all --arch=x64,arm64
+      - name: Release notes from CHANGELOG.md
+        run: |
+          awk -v v="${VERSION}" '
+            $0 ~ "^## " { if (found) exit; if (index($0, "## " v " ") == 1 || $0 == "## " v) { found = 1 } }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          test -s notes.md || echo "## ${VERSION}" > notes.md
+          cat >> notes.md <<EOF
+
+          ## Install
+
+          | Package | x86_64 | arm64 |
+          |---|---|---|
+          | Fedora / RHEL (RPM) | \`outlook-for-linux-${VERSION}.x86_64.rpm\` | \`outlook-for-linux-${VERSION}.aarch64.rpm\` |
+          | Debian / Ubuntu (DEB) | \`outlook-for-linux_${VERSION}_amd64.deb\` | \`outlook-for-linux_${VERSION}_arm64.deb\` |
+          | AppImage | \`outlook-for-linux-${VERSION}.AppImage\` | \`outlook-for-linux-${VERSION}-arm64.AppImage\` |
+          | tar.gz | \`outlook-for-linux-${VERSION}.tar.gz\` | \`outlook-for-linux-${VERSION}-arm64.tar.gz\` |
+
+          \`\`\`bash
+          sudo dnf install ./outlook-for-linux-${VERSION}.x86_64.rpm     # Fedora / RHEL
+          sudo apt install ./outlook-for-linux_${VERSION}_amd64.deb      # Debian / Ubuntu
+          \`\`\`
+
+          Verify downloads with \`sha256sum -c SHA256SUMS --ignore-missing\`.
+
+          Unofficial; not affiliated with or endorsed by Microsoft.
+          EOF
+      - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" dist/outlook-for-linux/*.rpm dist/outlook-for-linux/*.sha256 --clobber
+          cd dist/outlook-for-linux
+          files=$(ls *.rpm *.deb *.AppImage *.tar.gz latest-linux*.yml SHA256SUMS)
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" $files --clobber
+            gh release edit "$TAG" --notes-file ../../notes.md --title "v${VERSION}"
           else
-            gh release create "$GITHUB_REF_NAME" dist/outlook-for-linux/*.rpm dist/outlook-for-linux/*.sha256 \
-              --title "Outlook for Linux ${GITHUB_REF_NAME#v}" --generate-notes
+            gh release create "$TAG" $files --title "v${VERSION}" --notes-file ../../notes.md --verify-tag
           fi

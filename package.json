@@ -1,6 +1,6 @@
 {
   "name": "outlook-for-linux",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "private": true,
   "description": "Unofficial Microsoft Outlook client for Linux using Electron. It uses the Outlook web app and wraps it as a standalone desktop application.",
   "license": "GPL-3.0-or-later",
@@ -22,7 +22,8 @@
     "smoke": "node scripts/smoke.js src/main.js",
     "package:rpm": "node scripts/package.js outlook-for-linux rpm",
     "package:deb": "node scripts/package.js outlook-for-linux deb",
-    "package:appimage": "node scripts/package.js outlook-for-linux AppImage"
+    "package:appimage": "node scripts/package.js outlook-for-linux AppImage",
+    "package:all": "node scripts/package.js outlook-for-linux all --arch=x64,arm64"
   },
   "dependencies": {
     "@ms365-for-linux/core": "0.1.0",
