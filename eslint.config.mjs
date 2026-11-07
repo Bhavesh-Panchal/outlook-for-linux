@@ -7,7 +7,7 @@ export default [
   { languageOptions: { globals: { ...globals.node } } },
   {
     // Preloads and local pages run in the renderer.
-    files: ["{packages/,}core/src/preload/**/*.js", "{packages/,}core/static/**/*.js"],
+    files: ["{packages/,}core/src/preload/**/*.js", "{packages/,}core/static/**/*.js", "scripts/repo-template/site/**/*.js", "docs/**/*.js"],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
   },
   pluginJs.configs.recommended,
