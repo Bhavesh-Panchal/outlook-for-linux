@@ -304,6 +304,15 @@ function onReady(ctx, userArgs) {
  * @param {object} descriptor product descriptor (see docs/product-descriptor.md)
  */
 function startApp(descriptor) {
+  // A remote-debugging port gives any local process full control of the signed-in
+  // session. Packaged builds refuse to start with it (the fuses already block
+  // --inspect and NODE_OPTIONS). Developers can set MS365_ALLOW_REMOTE_DEBUGGING=1.
+  const debugSwitch = ["remote-debugging-port", "remote-debugging-pipe", "remote-debugging-address"].find((s) => app.commandLine.hasSwitch(s));
+  if (debugSwitch && app.isPackaged && process.env.MS365_ALLOW_REMOTE_DEBUGGING !== "1") {
+    console.error(`[SECURITY] Refusing to start with --${debugSwitch}. Set MS365_ALLOW_REMOTE_DEBUGGING=1 to allow it.`);
+    app.exit(1);
+    return;
+  }
   const product = validateProduct(descriptor);
   const bootLogger = util.createLogger("info");
   const configDir = path.join(app.getPath("appData"), product.id);

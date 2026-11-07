@@ -25,5 +25,11 @@ Microsoft at <https://msrc.microsoft.com/report>.
 - Device and notification permissions are granted only to Outlook's own hosts.
 - IPC messages are accepted only from the frames they are meant for.
 - Logs never include URL queries, account names, tokens or MQTT credentials.
+- The packaged binary is hardened with Electron fuses: it cannot be used as a plain Node.js
+  (`ELECTRON_RUN_AS_NODE`), does not accept `NODE_OPTIONS` code injection or `--inspect`, loads code only
+  from its own `app.asar`, and encrypts cookies (your Microsoft session) with a key from the desktop keyring.
+- Packaged builds refuse `--remote-debugging-port`.
+- CI fails on any known vulnerability in shipped dependencies (`npm audit`) and on any change to the
+  hardening (`scripts/check-fuses.js`, which also tries each blocked attack).
 
 See also [PRIVACY.md](PRIVACY.md).

@@ -202,6 +202,7 @@ Unlike many web-app wrappers, Outlook for Linux keeps Electron's security featur
 - Every message from a page to the app is checked against the page that sent it.
 - Links to other sites open in your default browser; `file:`, `javascript:` and `data:` links are blocked.
 - Logs never contain URLs with query strings, account names or MQTT credentials.
+- The binary is hardened with Electron fuses (no `ELECTRON_RUN_AS_NODE`, `NODE_OPTIONS`, `--inspect` or remote debugging), and sign-in cookies are encrypted with your desktop keyring.
 
 See [SECURITY.md](SECURITY.md) to report a vulnerability, and [PRIVACY.md](PRIVACY.md) for what data the app handles.
 

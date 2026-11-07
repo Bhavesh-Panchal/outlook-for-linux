@@ -101,6 +101,8 @@ const config = {
   directories: { output, buildResources: "assets" },
   files: ["src/**", "assets/**", "node_modules/**", "package.json", "LICENSE"],
   asar: true,
+  // Hardens the Electron binary (scripts/afterpack.js); verified by scripts/check-fuses.js.
+  afterPack: path.join(__dirname, "afterpack.js"),
   protocols: meta.protocols,
   linux: {
     executableName: appId,
