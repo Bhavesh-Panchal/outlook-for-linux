@@ -1,0 +1,42 @@
+name: Release
+
+# Push a tag like v0.2.4 (matching "version" in package.json) to build the RPM
+# and attach it, with its SHA-256 checksum, to the GitHub release for that tag.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Tag must match package.json version
+        run: |
+          version="$(node -p 'require("./package.json").version')"
+          test "v${version}" = "${GITHUB_REF_NAME}" || { echo "Tag ${GITHUB_REF_NAME} does not match version ${version}"; exit 1; }
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq rpm > /dev/null
+      - run: npm ci
+      - run: npm run check
+      - run: npm run package:rpm
+      - name: Checksum
+        working-directory: dist/outlook-for-linux
+        run: for f in *.rpm; do sha256sum "$f" > "$f.sha256"; done
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/outlook-for-linux/*.rpm dist/outlook-for-linux/*.sha256 --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/outlook-for-linux/*.rpm dist/outlook-for-linux/*.sha256 \
+              --title "Outlook for Linux ${GITHUB_REF_NAME#v}" --generate-notes
+          fi

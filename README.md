@@ -1,5 +1,6 @@
 # Outlook for Linux
 
+![CI](https://github.com/Bhavesh-Panchal/outlook-for-linux/actions/workflows/ci.yml/badge.svg)
 ![Release](https://img.shields.io/github/v/release/Bhavesh-Panchal/outlook-for-linux?style=flat&label=release)
 ![Downloads](https://img.shields.io/github/downloads/Bhavesh-Panchal/outlook-for-linux/total.svg?style=flat)
 ![License](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg?style=flat)
