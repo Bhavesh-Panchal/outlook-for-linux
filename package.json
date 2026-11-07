@@ -1,8 +1,8 @@
 {
   "name": "outlook-for-linux",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
-  "description": "Unofficial Outlook on the web desktop client for Linux",
+  "description": "Unofficial Microsoft Outlook client for Linux using Electron. It uses the Outlook web app and wraps it as a standalone desktop application.",
   "license": "GPL-3.0-or-later",
   "homepage": "https://github.com/Bhavesh-Panchal/outlook-for-linux",
   "bugs": {

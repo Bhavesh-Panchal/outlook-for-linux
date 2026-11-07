@@ -197,7 +197,14 @@ npm run package:rpm  # dist/outlook-for-linux/outlook-for-linux-<version>.x86_64
 
 ## License
 
-**GPL-3.0-or-later**: see [LICENSE](LICENSE). Parts of `core/` and the penguin in the icon come from
-[teams-for-linux](https://github.com/IsmaelMartinez/teams-for-linux) (GPL-3.0-or-later); see [NOTICE.md](NOTICE.md).
+**GPL-3.0-or-later**: see [LICENSE](LICENSE). Third-party notices are in [NOTICE.md](NOTICE.md).
 
 Microsoft, Outlook and OneDrive are trademarks of Microsoft Corporation.
+
+---
+
+<p align="center">
+  Made with ❤️ for the Linux community by <a href="https://github.com/Bhavesh-Panchal">Bhavesh Panchal</a>
+  <br>
+  <sub>If Outlook for Linux helps you, please ⭐ star the repository and share it with your team.</sub>
+</p>

@@ -13,7 +13,7 @@ module.exports = {
   id: "outlook-for-linux",
   name: "Outlook for Linux",
   title: "Outlook",
-  description: "Unofficial Outlook on the web desktop client for Linux",
+  description: pkg.description,
   version: pkg.version,
   homepage: pkg.homepage,
   bugs: pkg.bugs?.url,

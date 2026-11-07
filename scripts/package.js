@@ -16,14 +16,14 @@ const root = path.join(__dirname, "..");
 const APPS = {
   "outlook-for-linux": {
     productName: "Outlook for Linux",
-    comment: "Unofficial Outlook on the web client",
+    comment: "Unofficial Microsoft Outlook client for Linux",
     category: "Office;Email;",
     keywords: "mail;email;calendar;outlook;office365;microsoft365;",
     protocols: [{ name: "Email", schemes: ["mailto"] }],
   },
   "onedrive-for-linux": {
     productName: "OneDrive for Linux",
-    comment: "Unofficial OneDrive on the web client (no file sync)",
+    comment: "Unofficial Microsoft OneDrive client for Linux",
     category: "Network;FileTransfer;",
     keywords: "onedrive;cloud;files;sharepoint;office365;microsoft365;",
     protocols: [
@@ -102,13 +102,13 @@ const config = {
     icon: "assets/icons",
     category: meta.category.replace(/;$/, ""),
     synopsis: meta.comment,
-    description: `${appPkg.description}. Unofficial; not affiliated with Microsoft.`,
+    description: appPkg.description,
     maintainer: appPkg.author.email,
     vendor: "ms365-for-linux",
     desktop: {
       entry: {
         Name: meta.productName,
-        Comment: meta.comment,
+        Comment: appPkg.description,
         Categories: meta.category,
         Keywords: meta.keywords,
         StartupWMClass: appId,
