@@ -5,6 +5,10 @@ body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "
 a { color: var(--accent); }
 .hero { text-align: center; padding: 56px 20px 40px; background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 18%, transparent), transparent); }
 .hero h1 { font-size: 2.6rem; margin: 12px 0 4px; }
+.hero.small { padding: 32px 20px 28px; }
+.hero.small h1 { font-size: 2rem; }
+.crumbs { font-size: 0.9rem; color: var(--muted); margin: 0; }
+ol.features { padding-left: 1.4rem; }
 .tagline { font-size: 1.2rem; max-width: 640px; margin: 0 auto 20px; }
 .meta { color: var(--muted); font-size: 0.9rem; }
 .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }

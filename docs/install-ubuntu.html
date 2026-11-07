@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Install Outlook on Ubuntu, Debian and Linux Mint – Outlook for Linux</title>
+  <meta name="description" content="Install the free Outlook for Linux desktop app on Ubuntu, Debian, Linux Mint or Pop!_OS with apt. DEB packages for amd64 and arm64.">
+  <meta name="author" content="Bhavesh Panchal">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://bhavesh-panchal.github.io/outlook-for-linux/install-ubuntu.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Outlook for Linux">
+  <meta property="og:title" content="How to Install Outlook on Ubuntu, Debian and Linux Mint – Outlook for Linux">
+  <meta property="og:description" content="Install the free Outlook for Linux desktop app on Ubuntu, Debian, Linux Mint or Pop!_OS with apt. DEB packages for amd64 and arm64.">
+  <meta property="og:url" content="https://bhavesh-panchal.github.io/outlook-for-linux/install-ubuntu.html">
+  <meta property="og:image" content="https://bhavesh-panchal.github.io/outlook-for-linux/social.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://bhavesh-panchal.github.io/outlook-for-linux/social.png">
+  <meta name="theme-color" content="#1d5fd6">
+  <link rel="icon" type="image/png" href="icon-64.png">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HowTo",
+      "name": "Install Outlook on Ubuntu, Debian and Linux Mint",
+      "headline": "Install Outlook on Ubuntu, Debian and Linux Mint",
+      "description": "Install the free Outlook for Linux desktop app on Ubuntu, Debian, Linux Mint or Pop!_OS with apt. DEB packages for amd64 and arm64.",
+      "author": {
+        "@type": "Person",
+        "name": "Bhavesh Panchal",
+        "url": "https://github.com/Bhavesh-Panchal"
+      },
+      "dateModified": "2026-11-07",
+      "image": "https://bhavesh-panchal.github.io/outlook-for-linux/social.png",
+      "mainEntityOfPage": "https://bhavesh-panchal.github.io/outlook-for-linux/install-ubuntu.html",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "text": "Download outlook-for-linux_&lt;version&gt;_amd64.deb (or _arm64.deb on ARM, e.g. Raspberry Pi 5) from the latest release."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "text": "Install it: sudo apt install ./outlook-for-linux_*_amd64.deb"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "text": "Start Outlook for Linux from your application menu, or run outlook-for-linux."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "text": "Sign in with your work or school account, or your personal Outlook.com account. For both at once, start a second profile: outlook-for-linux --profile=personal --account=personal."
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Outlook for Linux",
+          "item": "https://bhavesh-panchal.github.io/outlook-for-linux/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Ubuntu and Debian",
+          "item": "https://bhavesh-panchal.github.io/outlook-for-linux/install-ubuntu.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body style="--accent: #1d5fd6">
+  <header class="hero small">
+    <p class="crumbs"><a href="./">Outlook for Linux</a> › Ubuntu and Debian</p>
+    <h1>{{G_H1}}</h1>
+    <p class="tagline">Outlook on Ubuntu, Debian and Mint as a desktop app, from a .deb package.</p>
+    <p class="actions">
+      <a class="button primary" href="https://github.com/Bhavesh-Panchal/outlook-for-linux/releases/latest" id="download">Download for Linux</a>
+      <a class="button" href="https://github.com/Bhavesh-Panchal/outlook-for-linux">View on GitHub</a>
+    </p>
+  </header>
+  <main>
+    <section>
+      <h2>Install with apt</h2>
+      <ol class="features">
+        <li>Download <code>outlook-for-linux_&lt;version&gt;_amd64.deb</code> (or <code>_arm64.deb</code> on ARM, e.g. Raspberry Pi 5) from the <a href="https://github.com/Bhavesh-Panchal/outlook-for-linux/releases/latest">latest release</a>.</li>
+        <li>Install it: <code>sudo apt install ./outlook-for-linux_*_amd64.deb</code></li>
+        <li>Start <em>Outlook for Linux</em> from your application menu, or run <code>outlook-for-linux</code>.</li>
+        <li>Sign in with your work or school account, or your personal Outlook.com account. For both at once, start a second profile: <code>outlook-for-linux --profile=personal --account=personal</code>.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>After installing</h2>
+      <p>To open mailto: links in the app, choose <em>Settings › Set as default mail client</em> in the tray or app menu.</p>
+    </section>
+    <section>
+      <h2>Update or remove</h2>
+      <p>Install a newer .deb the same way. Remove it with <code>sudo apt remove outlook-for-linux</code>.</p>
+    </section>
+    <section>
+      <h2>More guides</h2>
+      <ul class="features">
+        <li><a href="install-fedora.html">Install Outlook on Fedora</a></li>
+        <li><a href="install-ubuntu.html" aria-current="page">Install Outlook on Ubuntu, Debian and Linux Mint</a></li>
+        <li><a href="install-appimage.html">Outlook on Arch Linux, Manjaro and any distribution</a></li>
+        <li><a href="alternatives.html">Every way to use Outlook on Linux</a></li>
+      </ul>
+    </section>
+  </main>
+  <footer>
+    <p>Made with ❤️ for the Linux community by <a href="https://github.com/Bhavesh-Panchal" rel="author">Bhavesh Panchal</a>. Updated 2026-11-07.</p>
+    <p class="small">Outlook for Linux is an unofficial project, not affiliated with or endorsed by Microsoft. Microsoft, Outlook and OneDrive are trademarks of Microsoft Corporation.</p>
+  </footer>
+  <script src="download.js" defer></script>
+</body>
+</html>
