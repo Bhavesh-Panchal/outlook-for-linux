@@ -1,0 +1,71 @@
+name: Bug Report
+description: Something does not work as expected.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: dropdown
+    id: reproduce-web
+    attributes:
+      label: Does this also happen on Outlook on the web (https://outlook.office.com) in a normal browser?
+      description: If it does, it is most likely a Microsoft issue rather than a Outlook for Linux issue. Please report it to Microsoft as well.
+      options:
+        - "No, only in Outlook for Linux"
+        - "Yes, also in the browser"
+        - "Not applicable"
+    validations:
+      required: true
+  - type: input
+    id: description
+    attributes:
+      label: Describe the bug
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Shown in the tray menu under About.
+      placeholder: ex. 0.2.2
+    validations:
+      required: true
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options: [rpm, deb, AppImage, Built from source]
+    validations:
+      required: true
+  - type: dropdown
+    id: account
+    attributes:
+      label: Account type
+      options: [Work or school (Microsoft 365), Personal (Microsoft account), Both]
+    validations:
+      required: true
+  - type: input
+    id: distro
+    attributes:
+      label: Distribution and desktop
+      placeholder: ex. Fedora 44, KDE Plasma (Wayland)
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Run `outlook-for-linux` from a terminal and paste relevant lines. Remove email addresses and anything personal.
+      render: shell

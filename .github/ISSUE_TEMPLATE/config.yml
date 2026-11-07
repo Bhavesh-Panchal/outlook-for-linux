@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/Bhavesh-Panchal/outlook-for-linux/security/advisories/new
+    about: Please report security issues privately.
+  - name: Problem in Outlook on the web itself
+    url: https://support.microsoft.com/outlook
+    about: If it also happens in a normal browser, report it to Microsoft.

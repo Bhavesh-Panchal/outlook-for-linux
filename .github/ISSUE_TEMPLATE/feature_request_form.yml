@@ -1,0 +1,26 @@
+name: Feature Request
+description: Suggest an idea for Outlook for Linux.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: dropdown
+    id: teams-parity
+    attributes:
+      label: Does Teams for Linux already have this?
+      options: ["Yes", "No", "Not sure"]
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
