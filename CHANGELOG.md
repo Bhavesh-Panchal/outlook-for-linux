@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.1 (2026-11-07)
+
+### Security
+
+* **hardening:** Electron fuses on every package: no `ELECTRON_RUN_AS_NODE`, no `NODE_OPTIONS` injection, no `--inspect`, app code only from `app.asar`
+* **hardening:** sign-in cookies are encrypted with a key from the desktop keyring (existing cookies are re-encrypted as they are used)
+* **hardening:** packaged builds refuse `--remote-debugging-port`
+* **deps:** no known vulnerabilities in shipped dependencies; build tools moved to a fixed `minimatch` (GHSA-g3hv-75wg-m249)
+
+### CI/CD
+
+* **ci:** every build runs `npm audit` and `scripts/check-fuses.js`, which tries each blocked attack against the packaged binary
+
+### Documentation
+
+* **site:** project website on GitHub Pages
+
 ## 0.3.0 (2026-11-07)
 
 ### Features
