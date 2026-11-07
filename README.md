@@ -188,6 +188,40 @@ npm run package:all  # every format for x86_64 and arm64
 - [OneDrive for Linux](https://github.com/Bhavesh-Panchal/onedrive-for-linux): the same desktop shell for OneDrive
 - [Teams for Linux](https://github.com/IsmaelMartinez/teams-for-linux): the project this one is modelled on
 
+## Project Activity
+
+<p align="center">
+  <a href="https://github.com/Bhavesh-Panchal/outlook-for-linux/pulse"><img alt="Commits per month" src="https://img.shields.io/github/commit-activity/m/Bhavesh-Panchal/outlook-for-linux?style=for-the-badge&label=commits%2Fmonth&color=1d5fd6&labelColor=1f2937"></a>
+  <a href="https://github.com/Bhavesh-Panchal/outlook-for-linux/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/Bhavesh-Panchal/outlook-for-linux?style=for-the-badge&label=last%20commit&color=1d5fd6&labelColor=1f2937"></a>
+  <a href="https://github.com/Bhavesh-Panchal/outlook-for-linux/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/Bhavesh-Panchal/outlook-for-linux/total?style=for-the-badge&label=downloads&color=1d5fd6&labelColor=1f2937"></a>
+  <br>
+  <a href="https://github.com/Bhavesh-Panchal/outlook-for-linux/issues"><img alt="Open issues" src="https://img.shields.io/github/issues/Bhavesh-Panchal/outlook-for-linux?style=for-the-badge&label=open%20issues&color=f59e0b&labelColor=1f2937"></a>
+  <a href="https://github.com/Bhavesh-Panchal/outlook-for-linux/issues?q=is%3Aissue+is%3Aclosed"><img alt="Closed issues" src="https://img.shields.io/github/issues-closed/Bhavesh-Panchal/outlook-for-linux?style=for-the-badge&label=closed&color=22c55e&labelColor=1f2937"></a>
+  <a href="https://github.com/Bhavesh-Panchal/outlook-for-linux/pulls"><img alt="Pull requests" src="https://img.shields.io/github/issues-pr/Bhavesh-Panchal/outlook-for-linux?style=for-the-badge&label=pull%20requests&color=a855f7&labelColor=1f2937"></a>
+  <a href="https://github.com/Bhavesh-Panchal/outlook-for-linux/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/Bhavesh-Panchal/outlook-for-linux?style=for-the-badge&label=stars&color=eab308&labelColor=1f2937"></a>
+</p>
+
+<table align="center">
+  <tr>
+    <th>Star history</th>
+    <th>Contributors</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://star-history.com/#Bhavesh-Panchal/outlook-for-linux&Date">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Bhavesh-Panchal/outlook-for-linux&type=Date&theme=dark">
+          <img alt="Star history" width="420" src="https://api.star-history.com/svg?repos=Bhavesh-Panchal/outlook-for-linux&type=Date">
+        </picture>
+      </a>
+    </td>
+    <td align="center" valign="top">
+      <a href="https://github.com/Bhavesh-Panchal/outlook-for-linux/graphs/contributors"><img alt="Contributors" src="https://contrib.rocks/image?repo=Bhavesh-Panchal/outlook-for-linux&max=24&columns=6"></a>
+      <br><sub>Thanks to everyone who has contributed.</sub>
+    </td>
+  </tr>
+</table>
+
 ## Support
 
 - 🐛 **Bugs and feature requests:** [open an issue](https://github.com/Bhavesh-Panchal/outlook-for-linux/issues/new/choose)

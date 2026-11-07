@@ -25,6 +25,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -40,33 +41,13 @@ jobs:
       - run: npm run check
       - name: Build RPM, DEB, AppImage and tar.gz for x86_64 and arm64
         run: node scripts/package.js outlook-for-linux all --arch=x64,arm64
-      - name: Release notes from CHANGELOG.md
+      - name: Release notes (CHANGELOG.md + merged pull requests)
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          awk -v v="${VERSION}" '
-            $0 ~ "^## " { if (found) exit; if (index($0, "## " v " ") == 1 || $0 == "## " v) { found = 1 } }
-            found { print }
-          ' CHANGELOG.md > notes.md
-          test -s notes.md || echo "## ${VERSION}" > notes.md
-          cat >> notes.md <<EOF
-
-          ## Install
-
-          | Package | x86_64 | arm64 |
-          |---|---|---|
-          | Fedora / RHEL (RPM) | \`outlook-for-linux-${VERSION}.x86_64.rpm\` | \`outlook-for-linux-${VERSION}.aarch64.rpm\` |
-          | Debian / Ubuntu (DEB) | \`outlook-for-linux_${VERSION}_amd64.deb\` | \`outlook-for-linux_${VERSION}_arm64.deb\` |
-          | AppImage | \`outlook-for-linux-${VERSION}.AppImage\` | \`outlook-for-linux-${VERSION}-arm64.AppImage\` |
-          | tar.gz | \`outlook-for-linux-${VERSION}.tar.gz\` | \`outlook-for-linux-${VERSION}-arm64.tar.gz\` |
-
-          \`\`\`bash
-          sudo dnf install ./outlook-for-linux-${VERSION}.x86_64.rpm     # Fedora / RHEL
-          sudo apt install ./outlook-for-linux_${VERSION}_amd64.deb      # Debian / Ubuntu
-          \`\`\`
-
-          Verify downloads with \`sha256sum -c SHA256SUMS --ignore-missing\`.
-
-          Unofficial; not affiliated with or endorsed by Microsoft.
-          EOF
+          git fetch --tags --force --quiet
+          node scripts/release-notes.js "${VERSION}" --repo "${GITHUB_REPOSITORY}" > notes.md
+          cat notes.md
       - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
