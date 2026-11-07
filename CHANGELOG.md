@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.0 (2026-11-07)
+
+### Features
+
+* **auth:** sign-in dialog when a proxy or site asks for a user name and password (Basic, NTLM, Negotiate)
+* **auth:** `auth.basic.user` + `auth.basic.passwordCommand` sign in without the dialog, e.g. from `pass`
+* **auth:** PIN dialog for smartcard / PKCS#11 client certificates; pick a certificate with `auth.clientCertificate.issuer` or `.subject`
+* **auth:** trust a company CA (TLS-inspecting proxies) with `auth.customCAFingerprints`; the log prints the fingerprint to add
+* **control:** system-wide shortcuts with `shortcuts.global` (`show`, `hide`, `toggle`, `reload`, `home`, `quit`, `newMail`)
+* **control:** `--action=<name>` controls the running app from scripts
+* **control:** opt-in D-Bus interface (`dbus.enabled`): `Run`, `ListActions`, `GetUnreadCount` and an `UnreadChanged` signal
+* **updates:** daily check for a newer GitHub release with a notification; *Help › Check for Updates…*
+
+### Documentation
+
+* **readme:** corporate networks, shortcuts and remote control, updates
+
 ## 0.2.5 (2026-11-07)
 
 ### Features

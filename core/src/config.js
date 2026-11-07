@@ -6,6 +6,10 @@
 // Warnings name keys and sources only, never values (values can be URLs or
 // account names).
 
+const { AUTH_OPTIONS } = require("./enterprise");
+const { UPDATE_OPTIONS } = require("./updates");
+const { CONTROL_OPTIONS } = require("./control");
+
 const CORE_OPTIONS = Object.freeze({
   account: { type: "string", default: null, describe: "Account type to open: one of the product's url keys (e.g. work, personal)" },
   url: { type: "string", default: null, sensitive: true, describe: "Start URL override, e.g. a sovereign-cloud tenant" },
@@ -38,6 +42,9 @@ const CORE_OPTIONS = Object.freeze({
   },
   "performance.disableGpu": { type: "boolean", default: false, describe: "Disable hardware acceleration" },
   "logging.level": { type: "string", default: "info", enum: ["error", "warn", "info", "debug"], describe: "Console log level" },
+  ...AUTH_OPTIONS,
+  ...UPDATE_OPTIONS,
+  ...CONTROL_OPTIONS,
   profiles: { type: "object", default: {}, describe: "Per-profile overrides, keyed by profile name" },
 });
 

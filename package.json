@@ -1,6 +1,6 @@
 {
   "name": "outlook-for-linux",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "private": true,
   "description": "Unofficial Microsoft Outlook client for Linux using Electron. It uses the Outlook web app and wraps it as a standalone desktop application.",
   "license": "GPL-3.0-or-later",

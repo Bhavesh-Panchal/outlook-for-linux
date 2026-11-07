@@ -8,5 +8,8 @@
   "files": [
     "src",
     "static"
-  ]
+  ],
+  "dependencies": {
+    "@homebridge/dbus-native": "0.7.9"
+  }
 }

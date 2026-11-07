@@ -114,6 +114,15 @@ Example `~/.config/outlook-for-linux/config.json`:
 | `network.browserBrand` | `"chrome"` | Browser brand reported to the web app. "chrome" enables features Microsoft shows only to Chrome (e.g. Copilot in Outlook) (`chrome`, `chromium`) |
 | `performance.disableGpu` | `false` | Disable hardware acceleration |
 | `logging.level` | `"info"` | Console log level (`error`, `warn`, `info`, `debug`) |
+| `auth.basic.user` | – | User name for HTTP/proxy sign-in (used with auth.basic.passwordCommand) |
+| `auth.basic.passwordCommand` | – | Shell command whose first output line is the HTTP/proxy password, e.g. "pass show work/proxy". Tried once per host |
+| `auth.clientCertificate.issuer` | – | Pick the client certificate whose issuer name contains this text |
+| `auth.clientCertificate.subject` | – | Pick the client certificate whose subject name contains this text |
+| `auth.clientCertificate.pinDialog` | `true` | Ask for the PIN when a smartcard or security token holds the client certificate |
+| `auth.customCAFingerprints` | `[]` | Extra trusted certificate authorities, as "sha256/<base64>" fingerprints. The log names the fingerprint to add when a CA is rejected |
+| `updates.check` | `true` | Check GitHub for a newer release (once at startup, then daily) |
+| `shortcuts.global` | `{}` | System-wide shortcuts: action name to accelerator, e.g. {"toggle": "Ctrl+Alt+O"}. On Wayland the desktop asks once to allow them |
+| `dbus.enabled` | `false` | Offer a D-Bus control interface on the session bus (Run, ListActions, GetUnreadCount, UnreadChanged) |
 | `mqtt.enabled` | `false` | Publish the unread count to an MQTT broker |
 | `mqtt.brokerUrl` | – | Broker URL, e.g. mqtt://host:1883 or mqtts://host:8883 |
 | `mqtt.username` | – | Broker user name |
@@ -122,6 +131,41 @@ Example `~/.config/outlook-for-linux/config.json`:
 | `mqtt.topicPrefix` | `"outlook"` | Topic prefix: <prefix>/unread and <prefix>/connected |
 | `mqtt.homeAssistant` | `false` | Publish Home Assistant MQTT discovery config |
 | `mqtt.discoveryPrefix` | `"homeassistant"` | Home Assistant discovery prefix |
+
+### Corporate networks
+
+| Need | Setting |
+|---|---|
+| Proxy | `"network": { "proxyServer": "http://proxy.corp:3128" }` |
+| Proxy or site asks for a user name and password | A sign-in dialog appears. To skip it: `"auth": { "basic": { "user": "me", "passwordCommand": "pass show work/proxy" } }` (first output line is the password; tried once per host) |
+| Kerberos / NTLM single sign-on | `"network": { "authServerAllowlist": "*.corp.example.com" }` |
+| TLS-inspecting proxy with a company CA | `"auth": { "customCAFingerprints": ["sha256/…"] }`. When a CA is rejected, the log prints the exact fingerprint to add. |
+| Smartcard / PKCS#11 client certificate | A PIN dialog appears (`auth.clientCertificate.pinDialog`, on by default). Choose between several certificates with `auth.clientCertificate.issuer` or `.subject`. |
+
+Secrets typed into these dialogs or produced by `passwordCommand` are never logged or stored.
+
+### Shortcuts and remote control
+
+The same actions (`show`, `hide`, `toggle`, `reload`, `home`, `quit`, `newMail`) work three ways:
+
+```bash
+# 1. System-wide shortcuts (config.json). On Wayland the desktop asks once to allow them.
+{ "shortcuts": { "global": { "toggle": "Ctrl+Alt+O", "newMail": "Ctrl+Alt+M" } } }
+
+# 2. Command line: controls the running app (per profile)
+outlook-for-linux --action=toggle
+
+# 3. D-Bus (opt-in: "dbus": { "enabled": true })
+busctl --user call io.github.ms365_for_linux.outlook_for_linux /io/github/ms365_for_linux/outlook_for_linux io.github.ms365_for_linux.Control Run s toggle
+busctl --user call io.github.ms365_for_linux.outlook_for_linux /io/github/ms365_for_linux/outlook_for_linux io.github.ms365_for_linux.Control GetUnreadCount
+```
+
+D-Bus also emits an `UnreadChanged(i count)` signal, handy for status bars such as Waybar or Polybar.
+
+### Updates
+
+The app checks GitHub once a day for a newer release and shows a notification; *Help › Check for Updates…* checks now.
+It never installs anything itself. Turn it off with `"updates": { "check": false }`.
 
 ### Multiple accounts (profiles)
 

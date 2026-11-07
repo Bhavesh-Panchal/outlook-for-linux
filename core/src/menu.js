@@ -180,6 +180,7 @@ function actionItems(ctx, main, { productItems = [], settingsItems = [] } = {}) 
         ...(product.homepage ? [{ label: "GitHub Project", click: () => shell.openExternal(product.homepage) }] : []),
         ...(product.bugs ? [{ label: "Report an Issue", click: () => shell.openExternal(product.bugs) }] : []),
         ...(product.supportUrl ? [{ label: `Microsoft ${product.title} Support`, click: () => shell.openExternal(product.supportUrl) }] : []),
+        ...(ctx.checkForUpdates ? [{ type: "separator" }, { label: "Check for Updates…", click: () => ctx.checkForUpdates() }] : []),
       ],
     },
     { type: "separator" },

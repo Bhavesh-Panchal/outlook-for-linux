@@ -8,8 +8,19 @@
 const { contextBridge, ipcRenderer, webFrame } = require("electron");
 
 if (location.protocol === "file:") {
-  // The shell's own pages (offline page).
-  contextBridge.exposeInMainWorld("ms365Local", Object.freeze({ retry: () => ipcRenderer.send("ms365:offline-retry") }));
+  // The shell's own pages (offline page, prompts).
+  contextBridge.exposeInMainWorld(
+    "ms365Local",
+    Object.freeze({
+      retry: () => ipcRenderer.send("ms365:offline-retry"),
+      promptSubmit: (value) => {
+        if (value && typeof value.secret === "string" && value.secret.length > 0) {
+          ipcRenderer.send("ms365:prompt-submit", { user: typeof value.user === "string" ? value.user : "", secret: value.secret });
+        }
+      },
+      promptCancel: () => ipcRenderer.send("ms365:prompt-cancel"),
+    }),
+  );
 } else {
   contextBridge.exposeInMainWorld(
     "ms365Desktop",

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'" />
+    <title>Sign in</title>
+    <link rel="stylesheet" href="prompt.css" />
+  </head>
+  <body>
+    <form id="form" autocomplete="off">
+      <h1 id="heading"></h1>
+      <p id="message"></p>
+      <p id="warning" class="warning" hidden></p>
+      <label id="user-row" hidden>User name <input id="user" type="text" spellcheck="false" /></label>
+      <label id="secret-row">
+        <span id="secret-label">Password</span>
+        <input id="secret" type="password" required />
+      </label>
+      <div class="buttons">
+        <button id="cancel" type="button">Cancel</button>
+        <button id="submit" type="submit">OK</button>
+      </div>
+    </form>
+    <script src="prompt.js"></script>
+  </body>
+</html>

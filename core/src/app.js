@@ -2,7 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { app, Menu, nativeImage, nativeTheme, session, shell } = require("electron");
+const { app, globalShortcut, Menu, nativeImage, nativeTheme, session, shell } = require("electron");
 const { validateProduct } = require("./product");
 const { loadConfig, profileDataDir } = require("./config");
 const { createLinkClassifier, LINK } = require("./links");
@@ -17,6 +17,10 @@ const { createTray } = require("./tray");
 const { buildAppMenu, buildTrayMenu } = require("./menu");
 const { installDownloads } = require("./downloads");
 const { createConnectionMonitor } = require("./connection");
+const { createPrompter } = require("./prompt");
+const { installEnterpriseAuth } = require("./enterprise");
+const { createUpdateChecker } = require("./updates");
+const { createActions, installGlobalShortcuts, installDbus, actionFromArgv } = require("./control");
 
 const CORE_ROOT = path.join(__dirname, "..");
 const MAX_LOGGED_DENIALS = 100;
@@ -222,6 +226,10 @@ function onReady(ctx, userArgs) {
   ipc.on("ms365:offline-retry", "local", () => connection.retryNow());
 
   installDownloads(ses, ctx, () => main.window);
+  const prompt = createPrompter({ ipc, coreRoot: CORE_ROOT, icon: product.icons.app });
+  installEnterpriseAuth(ctx, { app, session: ses, prompt, getWindow: () => main.window });
+  const updates = createUpdateChecker(ctx, () => main.window);
+  ctx.checkForUpdates = updates.available ? () => updates.check({ manual: true }) : null;
 
   let extension = {};
   try {
@@ -230,6 +238,10 @@ function onReady(ctx, userArgs) {
     logger.error("[APP] Product setup failed; continuing without its extras", { message: error.message });
   }
   const extras = { productItems: extension.productItems ?? [], settingsItems: extension.menuItems ?? [] };
+  const control = createActions(ctx, { app, main, extra: extension.actions ?? {} });
+  installGlobalShortcuts(ctx, { app, globalShortcut, control });
+  installDbus(ctx, { app, control, getUnread: () => unread.count, onUnread });
+  updates.start();
 
   const pagePrefs = () => ({ silent: ctx.prefs.get("soundDisabled") });
   ipc.handle("ms365:get-page-prefs", "web", () => pagePrefs());
@@ -270,8 +282,16 @@ function onReady(ctx, userArgs) {
   if (process.env.MS365_SMOKE === "1") runSmokeChecks(ctx, main, unread);
 
   if (!openLaunchTarget(userArgs)) main.load(ctx.startUrl);
+  const firstAction = actionFromArgv(userArgs);
+  if (firstAction && firstAction !== "quit") main.window.webContents.once("did-finish-load", () => control.run(firstAction));
 
   app.on("second-instance", (_event, argv) => {
+    // "--action=<name>" controls the running instance without raising it.
+    const action = actionFromArgv(argv);
+    if (action) {
+      control.run(action);
+      return;
+    }
     main.show();
     openLaunchTarget(argv.slice(1));
   });
@@ -312,6 +332,17 @@ function startApp(descriptor) {
   if (flat["appearance.fontAntialiasing"] === "grayscale") app.commandLine.appendSwitch("disable-lcd-text");
   if (flat["network.proxyServer"]) app.commandLine.appendSwitch("proxy-server", flat["network.proxyServer"]);
   if (flat["network.authServerAllowlist"]) app.commandLine.appendSwitch("auth-server-allowlist", flat["network.authServerAllowlist"]);
+
+  // Global shortcuts on Wayland go through the desktop portal.
+  if (process.platform === "linux" && Object.keys(flat["shortcuts.global"] ?? {}).length > 0 && process.env.XDG_SESSION_TYPE === "wayland") {
+    app.commandLine.appendSwitch("enable-features", "GlobalShortcutsPortal");
+  }
+
+  // "--action=quit" with no running instance has nothing to do.
+  if (actionFromArgv(userArgs) === "quit" && app.requestSingleInstanceLock()) {
+    app.exit(0);
+    return;
+  }
 
   // One instance per profile: the lock lives in the profile's userData.
   if (!app.requestSingleInstanceLock()) {

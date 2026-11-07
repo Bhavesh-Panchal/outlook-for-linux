@@ -47,6 +47,8 @@ module.exports = {
       // Like "Join Meeting" in teams-for-linux: the main action of the app.
       // No accelerator: Outlook's own Ctrl+N opens compose in place.
       productItems: [{ label: "New mail", click: () => (ctx.main.show(), ctx.main.load(composeUrl(ctx.startUrl))) }],
+      // For shortcuts.global, --action= and D-Bus: e.g. {"newMail": "Ctrl+Alt+M"}
+      actions: { newMail: { describe: "Open a new message", run: () => (ctx.main.show(), ctx.main.load(composeUrl(ctx.startUrl))) } },
       menuItems: [defaultMailClientMenuItem(ctx)],
     };
   },
