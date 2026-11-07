@@ -10,6 +10,7 @@ const { isPermissionAllowed } = require("./security");
 const util = require("./util");
 const { createStateStore } = require("./state");
 const { createPrefs } = require("./prefs");
+const { installBrowserIdentity } = require("./identity");
 const { createIpc } = require("./ipc");
 const { createMainWindow } = require("./window");
 const { createTray } = require("./tray");
@@ -91,6 +92,7 @@ function runSmokeChecks(ctx, main, unread) {
              nodeVisible: typeof require !== "undefined" || typeof process !== "undefined",
              notificationWrapped: Notification.name === "Notification" && Object.getPrototypeOf(Notification) !== Function.prototype,
              title: document.title,
+             brands: navigator.userAgentData?.brands?.map((b) => b.brand) ?? [],
              pagePrefs: prefs,
            };
          })()`,
@@ -129,6 +131,7 @@ function onReady(ctx, userArgs) {
   const ua = flat["network.userAgent"] ?? util.cleanUserAgent(ses.getUserAgent());
   ses.setUserAgent(ua);
   app.userAgentFallback = ua;
+  installBrowserIdentity(app, { mode: flat["network.browserBrand"], userAgent: ua, logger });
   installPermissions(ses, ctx);
 
   const languages = flat["spellcheck.languages"];

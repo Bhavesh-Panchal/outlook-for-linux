@@ -30,6 +30,12 @@ const CORE_OPTIONS = Object.freeze({
   "network.authServerAllowlist": { type: "string", default: null, describe: "Hosts allowed for Kerberos/NTLM (Chromium --auth-server-allowlist)" },
   "network.allowInsecureHttp": { type: "boolean", default: false, describe: "Treat http:// app hosts as trusted (testing only)" },
   "network.userAgent": { type: "string", default: null, describe: "User agent override" },
+  "network.browserBrand": {
+    type: "string",
+    default: "chrome",
+    enum: ["chrome", "chromium"],
+    describe: "Browser brand reported to the web app. \"chrome\" enables features Microsoft shows only to Chrome (e.g. Copilot in Outlook)",
+  },
   "performance.disableGpu": { type: "boolean", default: false, describe: "Disable hardware acceleration" },
   "logging.level": { type: "string", default: "info", enum: ["error", "warn", "info", "debug"], describe: "Console log level" },
   profiles: { type: "object", default: {}, describe: "Per-profile overrides, keyed by profile name" },
