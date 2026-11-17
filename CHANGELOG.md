@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.4 (2026-11-17)
+
+### Bug Fixes
+
+* **badge:** the taskbar badge no longer keeps a wrong unread number. Outlook's service worker can set the badge directly, bypassing the app; the app now puts back the real count on every update and checks it every 5 seconds
+
 ## 0.3.3 (2026-11-17)
 
 ### Testing

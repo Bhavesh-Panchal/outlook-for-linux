@@ -2,7 +2,34 @@
 
 const path = require("node:path");
 
-/** Unread count from a page title, or null when the title carries none. */
+/**
+ * Owns the launcher (taskbar/dock) badge: remembers the wanted number and puts it
+ * back when something else changed it (e.g. a service worker calling
+ * navigator.setAppBadge, which Chromium applies without asking the app).
+ */
+function createLauncherBadge({ get, set, onRestore = () => {} }) {
+  let wanted = 0;
+  return {
+    want(n) {
+      wanted = n;
+      set(n);
+    },
+    enforce() {
+      const found = get();
+      if (found !== wanted) {
+        onRestore(found, wanted);
+        set(wanted);
+      }
+    },
+    get wanted() {
+      return wanted;
+    },
+  };
+}
+
+/**
+ * Unread count from a page title, or null when the title carries none.
+ */
 function parseUnreadFromTitle(title, pattern) {
   if (typeof title !== "string") return null;
   const match = pattern.exec(title);
@@ -167,6 +194,7 @@ function redactUrl(value) {
 }
 
 module.exports = {
+  createLauncherBadge,
   parseUnreadFromTitle,
   normalizeBadge,
   createUnreadTracker,

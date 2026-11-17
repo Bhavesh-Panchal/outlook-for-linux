@@ -176,10 +176,19 @@ function onReady(ctx, userArgs) {
 
   let tray = null;
   let lastCount = 0;
+  // The app owns the launcher badge. Outlook's service worker can set it directly
+  // through Chromium's Badging API, bypassing the page; without this the badge kept a
+  // number from the service worker while the page reported 0 unread.
+  const launcher = util.createLauncherBadge({
+    get: () => app.getBadgeCount(),
+    set: (n) => app.setBadgeCount(n),
+    onRestore: (found, wanted) => logger.debug("[UNREAD] Launcher badge was changed outside the app; restoring", { found, wanted }),
+  });
+  setInterval(() => launcher.enforce(), 5000).unref();
   const showBadge = (count) => {
     const shown = ctx.prefs.get("badgeDisabled") ? 0 : count;
     tray?.setUnread(shown);
-    app.setBadgeCount(Math.max(shown, 0));
+    launcher.want(Math.max(shown, 0));
   };
   const unreadListeners = new Set();
   const unread = util.createUnreadTracker(product.unread.sources, (count) => {
@@ -247,7 +256,10 @@ function onReady(ctx, userArgs) {
   };
 
   const ipc = createIpc({ classify: ctx.classify, coreRoot: CORE_ROOT, logger });
-  ipc.handle("ms365:set-badge", "web", (_event, value) => unread.fromBadge(value));
+  ipc.handle("ms365:set-badge", "web", (_event, value) => {
+    unread.fromBadge(value);
+    launcher.enforce();
+  });
   ipc.on("ms365:notification-click", "web", () => main.show());
 
   const connection = createConnectionMonitor(ctx, main.window);

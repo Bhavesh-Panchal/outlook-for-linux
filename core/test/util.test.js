@@ -137,3 +137,18 @@ test("IPC sender trust", () => {
   assert.equal(isTrustedSender("file:///opt/app/core/static/offline.html", "web", ctx), false);
   assert.equal(isTrustedSender(undefined, "web", ctx), false);
 });
+
+test("launcher badge: restores the app's count when something else changed it", () => {
+  let native = 0;
+  const restored = [];
+  const badge = util.createLauncherBadge({ get: () => native, set: (n) => (native = n), onRestore: (f, w) => restored.push([f, w]) });
+  badge.want(0);
+  native = 7; // a service worker called navigator.setAppBadge(7)
+  badge.enforce();
+  assert.equal(native, 0);
+  assert.deepEqual(restored, [[7, 0]]);
+  badge.want(3);
+  badge.enforce();
+  assert.equal(native, 3);
+  assert.equal(restored.length, 1, "no restore when nothing changed");
+});
