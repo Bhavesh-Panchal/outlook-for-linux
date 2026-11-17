@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.2 (2026-11-17)
+
+### Security
+
+* **electron:** update to Electron 44.11.3, which backports security fixes from Chromium, V8, ANGLE, Dawn, ICU and Skia
+* **permissions:** apply the permission rules to every browser session, not only the default one, so a session created later cannot grant notifications, camera or microphone to any page (as in teams-for-linux GHSA-58j7-22f8-6xqp)
+* **permissions:** refuse WebHID, WebUSB and Web Serial device access and cancel their device choosers; neither app uses them
+* **deps:** no known vulnerabilities in any dependency, including build tools (`@electron/universal` moved to 3.x, `minimatch` GHSA-g3hv-75wg-m249)
+
+### Testing
+
+* **smoke:** checks that a page in a newly created session is refused permissions
+
 ## 0.3.1 (2026-11-07)
 
 ### Security

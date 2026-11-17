@@ -2,7 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { app, globalShortcut, Menu, nativeImage, nativeTheme, session, shell } = require("electron");
+const { app, BrowserWindow, globalShortcut, Menu, nativeImage, nativeTheme, session, shell } = require("electron");
 const { validateProduct } = require("./product");
 const { loadConfig, profileDataDir } = require("./config");
 const { createLinkClassifier, LINK } = require("./links");
@@ -115,7 +115,21 @@ function runSmokeChecks(ctx, main, unread) {
          })()`,
       );
       await new Promise((r) => setTimeout(r, 500));
+      // Regression check for permission handlers on every session: an untrusted
+      // origin (localhost instead of the configured 127.0.0.1) in a fresh session.
+      let freshSessionNotifications = "skipped";
+      const pageUrl = new URL(contents.getURL());
+      if (pageUrl.hostname === "127.0.0.1") {
+        const probe = new BrowserWindow({ show: false, webPreferences: { session: session.fromPartition("ms365-smoke-probe"), sandbox: true, contextIsolation: true } });
+        try {
+          await probe.loadURL(`http://localhost:${pageUrl.port}/`);
+          freshSessionNotifications = await probe.webContents.executeJavaScript("Notification.requestPermission()");
+        } finally {
+          probe.destroy();
+        }
+      }
       const result = {
+        freshSessionNotifications,
         ...page,
         origin: util.redactUrl(contents.getURL()),
         unreadFromTitle,
@@ -133,7 +147,8 @@ function runSmokeChecks(ctx, main, unread) {
       const expectBadge = sources.includes("badge-api") ? 7 : expectTitle;
       result.ok =
         page.installed && !page.nodeVisible && page.notificationWrapped &&
-        unreadFromTitle === expectTitle && result.unreadAfterBadge === expectBadge && result.sandboxed && result.contextIsolation;
+        unreadFromTitle === expectTitle && result.unreadAfterBadge === expectBadge && result.sandboxed && result.contextIsolation &&
+        freshSessionNotifications !== "granted";
       finish(result.ok ? 0 : 1, result);
     } catch (error) {
       finish(1, { ok: false, reason: error.message });
