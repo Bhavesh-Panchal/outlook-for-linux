@@ -65,12 +65,25 @@ function installPermissions(ses, ctx) {
     }
     return ok;
   };
-  ses.setPermissionRequestHandler((contents, permission, callback, details) =>
-    callback(decide(contents, permission, details, details?.requestingUrl)),
-  );
-  ses.setPermissionCheckHandler((contents, permission, requestingOrigin, details) =>
-    decide(contents, permission, details, details?.requestingUrl ?? requestingOrigin),
-  );
+  const applyTo = (target) => {
+    target.setPermissionRequestHandler((contents, permission, callback, details) =>
+      callback(decide(contents, permission, details, details?.requestingUrl)),
+    );
+    target.setPermissionCheckHandler((contents, permission, requestingOrigin, details) =>
+      decide(contents, permission, details, details?.requestingUrl ?? requestingOrigin),
+    );
+    // WebHID, WebUSB and Web Serial: neither product uses them. Refuse device access
+    // and cancel any device chooser, so no page can reach a USB or HID device
+    // (security keys use WebAuthn, which is separate).
+    target.setDevicePermissionHandler(() => false);
+    target.on("select-hid-device", (event, _details, callback) => (event.preventDefault(), callback()));
+    target.on("select-usb-device", (event, _details, callback) => (event.preventDefault(), callback()));
+    target.on("select-serial-port", (event, _ports, _contents, callback) => (event.preventDefault(), callback("")));
+  };
+  // Every session, not only the default one: a session created later (e.g. a
+  // partition) would otherwise grant every request (teams-for-linux GHSA-58j7-22f8-6xqp).
+  applyTo(ses);
+  app.on("session-created", applyTo);
 }
 
 function runSmokeChecks(ctx, main, unread) {
