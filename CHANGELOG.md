@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.3 (2026-11-17)
+
+### Testing
+
+* **ci:** unit tests no longer load Electron, which could fail CI while the Electron binary was still being unpacked
+
 ## 0.3.2 (2026-11-17)
 
 ### Security

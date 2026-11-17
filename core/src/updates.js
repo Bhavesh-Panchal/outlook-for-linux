@@ -5,7 +5,9 @@
 // release and offers to open the download page. One request per check, to
 // api.github.com only; nothing about the user is sent.
 
-const { Notification, dialog, net, shell } = require("electron");
+// Electron is loaded on first use: config.js imports this file for its options,
+// and plain-Node unit tests must not load (and unpack) Electron.
+const electron = () => require("electron");
 
 const UPDATE_OPTIONS = Object.freeze({
   "updates.check": { type: "boolean", default: true, describe: "Check GitHub for a newer release (once at startup, then daily)" },
@@ -47,7 +49,7 @@ function createUpdateChecker(ctx, getWindow) {
   let checking = false;
 
   async function latestRelease() {
-    const response = await net.fetch(`https://api.github.com/repos/${repo}/releases/latest`, {
+    const response = await electron().net.fetch(`https://api.github.com/repos/${repo}/releases/latest`, {
       headers: { Accept: "application/vnd.github+json", "User-Agent": `${product.id}/${product.version}` },
     });
     if (!response.ok) throw new Error(`GitHub answered ${response.status}`);
@@ -56,6 +58,7 @@ function createUpdateChecker(ctx, getWindow) {
   }
 
   async function check({ manual = false } = {}) {
+    const { dialog } = electron();
     if (!repo || checking) return;
     checking = true;
     try {
@@ -76,6 +79,7 @@ function createUpdateChecker(ctx, getWindow) {
   }
 
   async function announce(latest, manual) {
+    const { Notification, dialog, shell } = electron();
     const skipped = state.get("updates")?.skipped;
     if (!manual && skipped === latest.version) return;
     if (!manual && Notification.isSupported() && !ctx.prefs?.get("notificationsDisabled")) {
